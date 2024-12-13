@@ -27,11 +27,12 @@ public class ArvoreGenerica{
         return q_nos;
     }
     public int height(Node no){
-        if (isExternal(no)) return 0;
+        if (isExternal(no)) return 1;
         else{
             int contador = 0;
             for (Node filhote:no.filhos){
                 contador = Math.max(contador,height(filhote));
+                System.out.println(no.valor);
             }
             return 1 + contador;
         }
@@ -46,6 +47,7 @@ public class ArvoreGenerica{
     public boolean isExternal(Node no){
         return no.filhos.size() == 0;
     }
+    
     //Métodos genéricos - //O nó que vai ser o pai 
     public void insert(Object pai, Object valor){
         Node no = busca(pai,this.root);
@@ -62,18 +64,45 @@ public class ArvoreGenerica{
         novo.valor = valor;
         novo.pai = null;
         novo.filhos = new ArrayList<>();
-        novo.filhos.add(this.root);
-        this.root.pai = novo;
+        if (this.root != null){
+            novo.filhos.add(this.root);
+            this.root.pai = novo;  
+        } 
         this.root = novo;
     }
 
     public Node busca(Object valor, Node no){
-         if (no.valor == valor) return no;
-         else{
-             for (Node filhote:no.filhos){
-                 return busca(valor,filhote);
-             }
-         }
+        if (no.valor != valor){
+            for (Node filhote:no.filhos){
+                Node v = busca(valor,filhote); 
+                return v;
+        }
     }
-    //Métodos de alteração 
+        return no; 
+    }
+    //Métodos de alteração
+
+    public Node Root(){
+        return this.root;
+    }
+    
+    public void imprimiPre(Node no){
+        System.out.println(no.valor); 
+        for (Node filhote:no.filhos){
+             imprimiPos(filhote); 
+         }
+     }
+
+    public void imprimiPos(Node no){
+       for (Node filhote:no.filhos){
+            imprimiPos(filhote); 
+        }
+        System.out.println(no.valor); 
+    }
 }
+/*
+   5
+   2
+   9 
+   1
+ */
