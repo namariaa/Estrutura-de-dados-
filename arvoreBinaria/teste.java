@@ -9,9 +9,8 @@ public class teste{
             int x = s.nextInt();
             lista.insert(x);
         }
-        lista.remove(7);
-        lista.remove(8);
-        lista.remove(4);
+        lista.imprimePre(lista.theRoot());
+        lista.inverter(lista.theRoot().getFilhoD(),lista.theRoot().getFilhoE());
         lista.imprimePre(lista.theRoot());
     }
 }

@@ -33,7 +33,7 @@ public class ArvoreBinaria{
         //Métodos
     }
     //The Node
-    Node root;
+    public Node root;
     //Root
 
     public ArvoreBinaria(){
@@ -183,4 +183,25 @@ public class ArvoreBinaria{
         return p;
     }
     //Inserção, deleção e alteração
+    public void inverter(Node no1, Node no2){
+        if (no1 != null && no2 != null){
+            System.out.println(no1.valor + " " + no2.valor);
+            int salvar = no1.valor;
+            no1.valor = no2.valor; 
+            no2.valor = salvar;
+            inverter(no1.filhoDireita,no2.filhoEsquerda);
+            inverter(no1.filhoEsquerda, no2.filhoDireita);
+        }
+        /*
+         *    6
+         *  4     8
+         * 1 5   7  9
+         */
+        /*
+         *    6
+         *  8     4
+         * 9 7   5  1
+         */
+    }
+    //Algoritmos especiais 
 }
