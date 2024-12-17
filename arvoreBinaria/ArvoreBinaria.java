@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class ArvoreBinaria{
     public class Node{
         Node pai, filhoDireita, filhoEsquerda;
-        int valor;
+        int valor, tamanho;
         //Atributos
 
         public Node getPai(){
@@ -42,16 +42,17 @@ public class ArvoreBinaria{
     //Construtor
 
     public int size(){ //Quantidade de nós
-        return tamanho(this.root) + 1;
+        return this.tamanho;
     }
-    public int tamanho(Node no){
-        if (isExternal(no)) return 0;
+    /*public int tamanho(Node no){
+        if (isExternal(no)) return 1;
         else{
             int cont = 0;
-            cont += 1 + Math.max(tamanho(no.filhoDireita), tamanho(no.filhoEsquerda));
+            if (no.filhoEsquerda != null) cont += 1 + tamanho(no.filhoEsquerda);
+            else if (no.filhoDireita != null){System.out.println(no.valor + " " + no.filhoDireita.valor); cont += 1 + tamanho(no.filhoDireita);}
             return cont;
         }
-    }
+    }*/
 
     public boolean isExternal(Node no){
         return (no.filhoDireita == null && no.filhoEsquerda == null);
@@ -70,7 +71,9 @@ public class ArvoreBinaria{
         if (isExternal(no)) return 1;
         else{
             int cont = 0;
-            cont = Math.max(cont, Math.max(height(no.filhoDireita), height(no.filhoEsquerda)));
+            if (no.filhoDireita == null) cont += Math.max(cont, tamanho(no.filhoEsquerda));
+            else if (no.filhoEsquerda == null) cont += Math.max(cont, tamanho(no.filhoDireita));
+            else cont += Math.max(cont, (Math.max(tamanho(no.filhoDireita), tamanho(no.filhoEsquerda))));
             return 1 + cont;
         }
     }
@@ -129,6 +132,7 @@ public class ArvoreBinaria{
             if (p.valor > v) p.filhoEsquerda = novo;
             else p.filhoDireita = novo;
         }
+        this.tamanho++;
     }
 
     public void remove(int v) throws EBinVazio{
@@ -185,7 +189,6 @@ public class ArvoreBinaria{
     //Inserção, deleção e alteração
     public void inverter(Node no1, Node no2){
         if (no1 != null && no2 != null){
-            System.out.println(no1.valor + " " + no2.valor);
             int salvar = no1.valor;
             no1.valor = no2.valor; 
             no2.valor = salvar;
@@ -196,11 +199,13 @@ public class ArvoreBinaria{
          *    6
          *  4     8
          * 1 5   7  9
+         * 2
          */
         /*
          *    6
          *  8     4
          * 9 7   5  1
+         * 2
          */
     }
     //Algoritmos especiais 

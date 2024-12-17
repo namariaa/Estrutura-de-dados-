@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class ArvoreGenerica{
-    private class Node{
+    public class Node{
         Object valor;
         Node pai;
         ArrayList<Node> filhos;
@@ -24,15 +24,25 @@ public class ArvoreGenerica{
     //Construtor
 
     public int Size(){
-        return q_nos;
+        return tamanho(this.root) + 1;
     }
+    public int tamanho(Node no){
+        if (isExternal(no)) return 0;
+        else{
+            int cont = 0;
+            for (Node filhote:no.filhos){
+                cont += 1 + tamanho(filhote);
+            }
+            return cont;
+        }
+    }
+
     public int height(Node no){
         if (isExternal(no)) return 1;
         else{
             int contador = 0;
             for (Node filhote:no.filhos){
                 contador = Math.max(contador,height(filhote));
-                System.out.println(no.valor);
             }
             return 1 + contador;
         }
@@ -74,8 +84,7 @@ public class ArvoreGenerica{
     public Node busca(Object valor, Node no){
         if (no.valor != valor){
             for (Node filhote:no.filhos){
-                Node v = busca(valor,filhote); 
-                return v;
+                no = busca(valor,filhote); 
         }
     }
         return no; 
@@ -89,7 +98,7 @@ public class ArvoreGenerica{
     public void imprimiPre(Node no){
         System.out.println(no.valor); 
         for (Node filhote:no.filhos){
-             imprimiPos(filhote); 
+             imprimiPre(filhote); 
          }
      }
 
@@ -99,10 +108,5 @@ public class ArvoreGenerica{
         }
         System.out.println(no.valor); 
     }
+
 }
-/*
-   5
-   2
-   9 
-   1
- */
