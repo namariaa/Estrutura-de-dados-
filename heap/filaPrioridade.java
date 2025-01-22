@@ -97,7 +97,28 @@ public class filaPrioridade{
         }
         else{
             this.root = this.last;
-            this.last 
+            this.last = null;
+            downHeap();
+        }
+    }
+
+    public void downHeap(){
+        Node pos = this.root;
+        while (pos.filhoEsquerdo.key < pos.key || pos.filhoDireito.key < pos.key){
+            if (pos.filhoEsquerdo.key < pos.filhoDireito.key){
+                Node antigo1 =  pos.filhoEsquerdo;
+                pos.key = pos.filhoEsquerdo.key;
+                pos.value = pos.filhoEsquerdo.value;
+                pos.filhoEsquerdo.key = antigo1.key;
+                pos.filhoEsquerdo.value = antigo1.value;
+            }
+            else{
+                Node antigo1 =  pos.filhoDireito;
+                pos.key = pos.filhoDireito.key;
+                pos.value = pos.filhoDireito.value;
+                pos.filhoDireito.key = antigo1.key;
+                pos.filhoDireito.value = antigo1.value;
+            }
         }
     }
 
