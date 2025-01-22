@@ -9,6 +9,12 @@ public class Teste{
             int x = s.nextInt();
             lista.insert(i + 1, x);
         }
+        lista.insert(0, 80);
+        lista.insert(6, 7);
+        lista.removeMin();
+        lista.removeMin();
+        System.out.println(lista.size());
+        System.out.println(lista.min());
         
     }
 }
