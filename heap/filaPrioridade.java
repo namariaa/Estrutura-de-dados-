@@ -7,16 +7,11 @@ public class filaPrioridade{
         private Node filhoDireito;
         //Atributos 
 
-        public filaPrioridade(){
-            this.root = null;
-            this.last = null;
-        }
-        //Construtor
-
-        public Object getKey(){
+        
+        public int getKey(){
             return key;
         }
-        public void setKey(Object k){
+        public void setKey(int k){
             key = k;
         }
         public Object getValue(){
@@ -30,7 +25,7 @@ public class filaPrioridade{
     //Classe nó 
     private Node root, last; //Armazena o último nó 
     private int tamanho;
-
+    
     public filaPrioridade(){
         this.root = null;
         this.last = null;
@@ -38,7 +33,7 @@ public class filaPrioridade{
     }
     //Construtor classe filaPrioridade
 
-    public void insert(Object key, Object value){
+    public void insert(int key, Object value){
         Node no = new Node();
         no.key = key;
         no.value = value;
@@ -51,79 +46,98 @@ public class filaPrioridade{
             this.last = no;
         }
         else{
-            TheLast();
-            this.last.filhoEsquerdo = no;
+            TheLast(); //Retorna o pai antes do vazio
+            if (this.last.filhoEsquerdo == null) {
+                this.last.filhoEsquerdo = no;
+        }
+            else this.last.filhoDireito = no;
             no.pai = this.last;
             this.last = no;
             upHeap();
         }
+        
     }
 
     public void upHeap(){
         Node pos = this.last;
         while (pos.pai.key > pos.key){
-            Node antigo = pos.pai;
-            pos.pai = pos;
-            pos = antigo;
-            pos = pos.pai;
+            Object valueantigo = pos.pai.value;
+            int keyantiga = pos.pai.key;
+            pos.pai.key = pos.key;
+            pos.pai.value = pos.value;
+            pos.key = keyantiga;
+            pos.value = valueantigo;
         }
     }
 
     public void TheLast(){
-        if (this.last.pai.filhoDireito != this.last){
-            this.last = this.last.pai;
-        }
-        else{
-            Node pos = this.last;
-            while (pos.pai != this.root && pos.pai.filhoEsquerdo != pos){
-                pos = pos.pai;
-            }
-            if (pos.pai.filhoEsquerdo == pos){
-                pos = pos.pai.filhoDireito;
-            }
+        if (this.last.pai != null){ //Não pode ser o raiz 
+            if (this.last.pai.filhoDireito != this.last) this.last = this.last.pai;
             else{
-                pos = pos.pai.filhoEsquerdo;
+                Node pos = this.last;
+                while (pos.pai != this.root && pos.pai.filhoEsquerdo != pos){
+                    pos = pos.pai;
+                }
+                if (pos.pai.filhoEsquerdo == pos){
+                    pos = pos.pai.filhoDireito;
+                }
+                else{
+                    pos = pos.pai.filhoEsquerdo;
+                }
+                while (pos.filhoEsquerdo != null){
+                    pos = pos.filhoEsquerdo;
+                }
+                this.last = pos;
             }
-            while (pos.filhoEsquerdo != null){
-                pos = pos.filhoEsquerdo;
-            }
-            this.last = pos;
         }
     }
 
-    public void removeMin() throws EFilaPrioridade {
+    public void removeMin() throws EFilaVazia {
         if (isEmpty()){
-            throw new EFilaPrioridade("Não há elementos para retirar");
+            throw new EFilaVazia("Não há elementos para retirar");
         }
         else{
-            this.root = this.last;
-            this.last = null;
+            this.root.key = this.last.key;
+            this.root.value = this.last.value;
+            if (this.last.pai.filhoEsquerdo == this.last.filhoEsquerdo){
+                this.last.pai.filhoEsquerdo = null;
+                this.last = this.last.pai;
+            }
+            else{
+                this.last.pai.filhoDireito = null;
+                this.last= this.last.pai.filhoEsquerdo;
+            } 
             downHeap();
         }
     }
-
+    
     public void downHeap(){
         Node pos = this.root;
         while (pos.filhoEsquerdo.key < pos.key || pos.filhoDireito.key < pos.key){
             if (pos.filhoEsquerdo.key < pos.filhoDireito.key){
-                Node antigo1 =  pos.filhoEsquerdo;
+                Object valueantigo = pos.value;
+                int keyantigo = pos.key;
                 pos.key = pos.filhoEsquerdo.key;
                 pos.value = pos.filhoEsquerdo.value;
-                pos.filhoEsquerdo.key = antigo1.key;
-                pos.filhoEsquerdo.value = antigo1.value;
+                pos.filhoEsquerdo.key = keyantigo ;
+                pos.filhoEsquerdo.value = valueantigo;
             }
             else{
-                Node antigo1 =  pos.filhoDireito;
+                Object valueantigo = pos.value;
+                int keyantigo = pos.key;
                 pos.key = pos.filhoDireito.key;
                 pos.value = pos.filhoDireito.value;
-                pos.filhoDireito.key = antigo1.key;
-                pos.filhoDireito.value = antigo1.value;
+                pos.filhoDireito.key = keyantigo;
+                pos.filhoDireito.value = valueantigo;
             }
         }
     }
 
-    public Object min(){
-        return this.root.getValue();
+    public Object min() throws EFilaVazia{
+        if (this.root != null) return this.root.getValue();
+        else{
+            throw new EFilaVazia("Não existe elemetos nessa heap");
+        }
     } 
 
     public int size(){
