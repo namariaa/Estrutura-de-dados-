@@ -65,16 +65,33 @@ class filaPrioridade{
 
     public void downHeap(){
         int index = 1;
-        while (this.lista[index][0] > this.lista[index + 1][0] || this.lista[index][0] > this.lista[index + 2][0]) {
-            if (this.lista[index + 1][0] < this.lista[index + 2][0]){
-                int [] antigo = this.lista[index];
-                this.lista[index] = this.lista[index + 1];
-                this.lista[index + 1] = antigo; 
+        while (index * 2 < this.last){
+            if (index * 2 + 1 <= this.last){
+                if (this.lista[index][0] > this.lista[index * 2][0] || this.lista[index][0] > this.lista[index * 2 + 1][0]){
+                    if (this.lista[index * 2][0] < this.lista[index * 2 + 1][0]){
+                        int [] antigo = lista[index * 2];
+                        lista[index * 2] = lista[index];
+                        lista[index] = antigo;
+                        index *= 2;
+                    }
+                    else{
+                        int [] antigo = lista[index * 2 + 1];
+                        lista[index * 2 + 1] = lista[index];
+                        lista[index] = antigo;
+                        index *= 2 + 1;
+                    }
+                }
             }
             else{
-                int [] antigo = this.lista[index];
-                this.lista[index] = this.lista[index + 2];
-                this.lista[index + 2] = antigo; 
+                if (index * 2 <= last){
+                    if (this.lista[index][0] > this.lista[index * 2][0]){
+                        int [] antigo = lista[index * 2];
+                        lista[index * 2] = lista[index];
+                        lista[index] = antigo;
+                        index *= 2;
+                    }
+                }
+                else break;
             }
         }
     }
