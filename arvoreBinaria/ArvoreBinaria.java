@@ -41,9 +41,9 @@ public class ArvoreBinaria{
     }
     //Construtor
 
-    public int size(){ //Quantidade de nós
-        return this.tamanho;
-    }
+    // public int size(){ //Quantidade de nós
+    //     return this.tamanho;
+    // }
     /*public int tamanho(Node no){
         if (isExternal(no)) return 1;
         else{
@@ -68,15 +68,16 @@ public class ArvoreBinaria{
     }
 
     public int height(Node no){
-        if (isExternal(no)) return 1;
+        if (isExternal(no)) return 0;
         else{
             int cont = 0;
-            if (no.filhoDireita == null) cont += Math.max(cont, tamanho(no.filhoEsquerda));
-            else if (no.filhoEsquerda == null) cont += Math.max(cont, tamanho(no.filhoDireita));
-            else cont += Math.max(cont, (Math.max(tamanho(no.filhoDireita), tamanho(no.filhoEsquerda))));
+            if (no.filhoDireita == null) cont += Math.max(cont, height(no.filhoEsquerda));
+            else if (no.filhoEsquerda == null) cont += Math.max(cont, height(no.filhoDireita));
+            else cont += Math.max(cont, (Math.max(height(no.filhoDireita), height(no.filhoEsquerda))));
             return 1 + cont;
         }
     }
+    
     public void imprimePre(Node no){
         if (no != null){
             System.out.println(no.valor);
@@ -132,7 +133,6 @@ public class ArvoreBinaria{
             if (p.valor > v) p.filhoEsquerda = novo;
             else p.filhoDireita = novo;
         }
-        this.tamanho++;
     }
 
     public void remove(int v) throws EBinVazio{
@@ -186,6 +186,8 @@ public class ArvoreBinaria{
         }
         return p;
     }
+
+
     //Inserção, deleção e alteração
     public void inverter(Node no1, Node no2){
         if (no1 != null && no2 != null){

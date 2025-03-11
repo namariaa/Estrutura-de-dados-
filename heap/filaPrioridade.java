@@ -1,7 +1,7 @@
 public class filaPrioridade{
     class Node{
         private int key;
-        private Object value;
+        private int value;
         private Node pai;
         private Node filhoEsquerdo;
         private Node filhoDireito;
@@ -14,10 +14,10 @@ public class filaPrioridade{
         public void setKey(int k){
             key = k;
         }
-        public Object getValue(){
+        public int getValue(){
             return value;
         }
-        public void setValue(Object v){
+        public void setValue(int v){
             value = v;
         }
         //Métodos
@@ -33,7 +33,7 @@ public class filaPrioridade{
     }
     //Construtor classe filaPrioridade
 
-    public void insert(int key, Object value){
+    public void insert(int key, int value){
         Node no = new Node();
         no.key = key;
         no.value = value;
@@ -61,7 +61,7 @@ public class filaPrioridade{
     public void upHeap(){
         Node pos = this.last;
         while (pos.pai.key > pos.key){
-            Object valueantigo = pos.pai.value;
+            int valueantigo = pos.pai.value;
             int keyantiga = pos.pai.key;
             pos.pai.key = pos.key;
             pos.pai.value = pos.value;
@@ -115,7 +115,7 @@ public class filaPrioridade{
         Node pos = this.root;
         while (pos.filhoEsquerdo.key < pos.key || pos.filhoDireito.key < pos.key){
             if (pos.filhoEsquerdo.key < pos.filhoDireito.key){
-                Object valueantigo = pos.value;
+                int valueantigo = pos.value;
                 int keyantigo = pos.key;
                 pos.key = pos.filhoEsquerdo.key;
                 pos.value = pos.filhoEsquerdo.value;
@@ -123,7 +123,7 @@ public class filaPrioridade{
                 pos.filhoEsquerdo.value = valueantigo;
             }
             else{
-                Object valueantigo = pos.value;
+                int valueantigo = pos.value;
                 int keyantigo = pos.key;
                 pos.key = pos.filhoDireito.key;
                 pos.value = pos.filhoDireito.value;
@@ -133,7 +133,7 @@ public class filaPrioridade{
         }
     }
 
-    public Object min() throws EFilaVazia{
+    public int min() throws EFilaVazia{
         if (this.root != null) return this.root.getValue();
         else{
             throw new EFilaVazia("Não existe elemetos nessa heap");
@@ -146,6 +146,28 @@ public class filaPrioridade{
 
     public boolean isEmpty(){
         return this.root == null;
+    }
+
+    public boolean isHeap(Node no){
+        if (no != null){
+            isHeap(no.filhoEsquerdo);
+            isHeap(no.filhoDireito);
+            if ((no.filhoEsquerdo == null && no.filhoDireito != null)){
+                return false;
+            } 
+            if (no.filhoEsquerdo != null){
+                if (no.filhoEsquerdo.value < no.value) return false;
+            }
+            if (no.filhoDireito != null){
+                if (no.filhoDireito.value < no.value) return false;
+            }
+            return true;
+        }
+        else return true;
+    }
+
+    public Node theRoot(){
+        return this.root;
     }
     //Métodos de fila de prioridade com heap
 

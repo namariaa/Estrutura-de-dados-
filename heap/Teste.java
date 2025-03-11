@@ -15,6 +15,7 @@ public class Teste{
         lista.removeMin();
         lista.removeMin();
         System.out.println(lista.min());
+        System.out.println(lista.isHeap(lista.theRoot()));
         
     }
 }

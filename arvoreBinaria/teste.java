@@ -12,8 +12,8 @@ public class teste{
         //lista.imprimePre(lista.theRoot());
         //lista.inverter(lista.theRoot().getFilhoD(),lista.theRoot().getFilhoE());
         //lista.imprimePre(lista.theRoot());
-        System.out.println(lista.size());
-        //System.out.println(lista.depth(lista.theRoot()));
-        //System.out.println(lista.height(lista.theRoot()));
+        System.out.println(lista.depth(lista.theRoot()));
+        System.out.println(lista.height(lista.theRoot()));
+        System.out.println(lista.isHeap(lista.theRoot()));
     }
 }
