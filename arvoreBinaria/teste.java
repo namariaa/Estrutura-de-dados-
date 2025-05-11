@@ -14,6 +14,5 @@ public class teste{
         //lista.imprimePre(lista.theRoot());
         System.out.println(lista.depth(lista.theRoot()));
         System.out.println(lista.height(lista.theRoot()));
-        System.out.println(lista.isHeap(lista.theRoot()));
     }
 }

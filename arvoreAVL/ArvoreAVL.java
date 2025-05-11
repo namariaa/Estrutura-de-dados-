@@ -1,17 +1,8 @@
 public class ArvoreAVL{
-    //Métodos que eram da binária e adaptei 
     public class Node{
         Node pai, filhoDireita, filhoEsquerda;
-        int valor, FB;
+        int valor, tamanho, fb;
         //Atributos
-
-        public Node getPai(){
-            return pai;
-        }
-        public void setPai(Node noPai){
-            pai = noPai;
-        }
-        //Métodos
     }
     //The Node
     public Node root;
@@ -22,14 +13,20 @@ public class ArvoreAVL{
     }
     //Construtor
 
+    public boolean isExternal(Node no){
+        return (no.filhoDireita == null && no.filhoEsquerda == null);
+    }
+
     public Node theRoot(){
         return this.root;
     }
 
+    //Métodos gerais 
+
     public void insert(int v){
         Node novo = new Node();
         novo.valor = v;
-        novo.FB = 0; //Sempre que insiro um novo ele começa com 0 pois não tem filhos 
+        novo.fb = 0;
         if (theRoot() == null){
             novo.filhoDireita = null;
             novo.filhoEsquerda = null;
@@ -48,19 +45,141 @@ public class ArvoreAVL{
                      p = p.filhoEsquerda;
                 }
             }
-            novo.setPai(p);
+            novo.pai = p;
             if (p.valor > v) p.filhoEsquerda = novo;
             else p.filhoDireita = novo;
-
+            //Chamar para atualizar o FB passando o nó que acabei de inserir 
+            int incremento = 1;
+            if (novo.pai.filhoDireita != null){ 
+                if (novo.pai.filhoDireita == novo){ //Se ele foi inserido na direita o incremento fica negativo
+                    incremento = -1;
+                }
+            }
+            atualizarFB(novo.pai, incremento);
         }
     }
 
-    public void remove(int v) throws EBinVazio{
+    public void atualizarFB(Node no, int incremento){ //no é nó que eu acabei de inserir 
+        if (no != theRoot()){
+            while (no != null){ //Vou pegando o pai e atualizando seu FB
+                no.fb += incremento;
+                if (no.fb == 2 || no.fb == -2) break;
+                if (no.pai != null){ //Mudar o valor do incremento dependendo se for filho direito ou esquerdo 
+                    if (no.pai.filhoEsquerda != null){
+                        if (no.pai.filhoEsquerda == no && incremento == -1) {
+                            incremento = 1;
+                            if (no.pai.pai == null) no.pai.fb += incremento;
+                            no = no.pai;
+                            break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                        }
+                    }
+                    if (no.pai.filhoDireita != null){
+                        if (no.pai.filhoDireita == no && incremento == 1){
+                            incremento = -1; 
+                            if (no.pai.pai == null) no.pai.fb += incremento;
+                            no = no.pai;
+                            break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                        }
+                    }
+                    no = no.pai;
+                }
+            }
+        }
+        else no.fb += incremento; //Se for o root já o laço não roda e nó não atualiza 
+        if (no.fb == -2){ //Chama rotações aqui esquerdas aqui
+            if (no.filhoDireita != null){
+                if (no.filhoDireita.fb == 1) rotacaoDuplaEsquerda(no);
+                else rotacaoEsquerda(no); //Sinais não opostos é simples 
+            }
+            else rotacaoEsquerda(no); //Quando ele não tem filho para conferir sinal é simples
+
+            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+            no.fb = no.fb + 1 - Math.min(no.pai.fb, 0);
+            no.pai.fb = no.pai.fb + 1 + Math.max(no.fb, 0);
+        }
+        else if (no.fb == 2){ //Rotações direitas vão ser chamadas aqui
+            if (no.filhoEsquerda != null){
+                if (no.filhoEsquerda.fb == -1) rotacaoDuplaDireita(no);
+                else rotacaoDireita(no); 
+            }
+            else rotacaoDireita(no);
+
+            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+            no.fb = no.fb - 1 - Math.max(no.pai.fb, 0);
+            no.pai.fb = no.pai.fb - 1 + Math.min(no.fb, 0);
+        }
+    }
+
+    //Os nos que as rotações recebem inicialmente é o "root"
+    public void rotacaoEsquerda(Node no){ //No sempre vai ter filho direito se não não tem FB desbalanceado
+        Node novoRoot = no.filhoDireita;
+        Node antigoEsquerdo = no.filhoDireita.filhoEsquerda;
+        Node antigoPaiRoot = no.pai;
+        novoRoot.filhoEsquerda = no;
+        no.pai = novoRoot;
+        novoRoot.pai = antigoPaiRoot; //O pai do antigo root vai ser pai do root atual
+        if (antigoPaiRoot != null){ //Se ele não era o root ele tinha um pai
+            if (antigoPaiRoot.filhoEsquerda != null){
+                if (antigoPaiRoot.filhoEsquerda == no) antigoPaiRoot.filhoEsquerda = novoRoot;
+                else antigoPaiRoot.filhoDireita = novoRoot;
+            }
+            else{
+                if (antigoPaiRoot.filhoDireita == no) antigoPaiRoot.filhoDireita = novoRoot;
+            }
+        }
+        no.filhoDireita = antigoEsquerdo;
+        if (antigoEsquerdo != null) antigoEsquerdo.pai = no;
+        if (no == theRoot()) root = novoRoot; //Se o nó era o root eu tenho que definir e não uma subarvore eu tenho que definir o novo root
+    }
+
+    public void rotacaoDireita(Node no){
+        Node novoRoot = no.filhoEsquerda;
+        Node antigoDireito = no.filhoEsquerda.filhoDireita;
+        Node antigoPaiRoot = no.pai;
+        novoRoot.filhoDireita = no;
+        no.pai = novoRoot;
+        novoRoot.pai = antigoPaiRoot;
+        if (antigoPaiRoot != null){ //Se ele não era o root ele tinha um pai
+            if (antigoPaiRoot.filhoEsquerda != null){
+                if (antigoPaiRoot.filhoEsquerda == no) antigoPaiRoot.filhoEsquerda = novoRoot;
+                else antigoPaiRoot.filhoDireita = novoRoot;
+            }
+            else{
+                if (antigoPaiRoot.filhoDireita == no) antigoPaiRoot.filhoDireita = novoRoot;
+            }
+        }
+        no.filhoEsquerda = antigoDireito;
+        if (antigoDireito != null) antigoDireito.pai = no;
+        if (no == theRoot()) root = novoRoot; //Se o nó era o root eu tenho que definir e não uma subarvore eu tenho que definir o novo root
+    }
+
+    public void rotacaoDuplaEsquerda(Node no){
+        rotacaoDireita(no.filhoDireita);
+        //Filho direita do nó é A e o filho da direita do filho da direita é o B
+        //Como tem duas rotações preciso usar a formula duas vezes uma para a direita e a outra para a esquerda
+        no.filhoDireita.filhoDireita.fb = no.filhoDireita.filhoDireita.fb - 1 - Math.max(no.filhoDireita.fb, 0);
+        no.filhoDireita.fb = no.filhoDireita.fb - 1 + Math.min(no.filhoDireita.filhoDireita.fb, 0);
+        rotacaoEsquerda(no);
+    }
+
+    public void rotacaoDuplaDireita(Node no){
+        rotacaoEsquerda(no.filhoEsquerda);
+        //Filho esquerda do nó é A e o filho da esquerda do filho da esquerda é o B
+        no.filhoEsquerda.filhoEsquerda.fb = no.filhoEsquerda.filhoEsquerda.fb + 1 - Math.min(no.filhoEsquerda.fb, 0);
+        no.filhoEsquerda.fb = no.filhoEsquerda.fb + 1 + Math.max(no.filhoEsquerda.filhoEsquerda.valor, 0);
+        rotacaoDireita(no);
+    }
+
+    public void remove(int v) throws EArvoreAVL{
         Node no = buscar(v);
         if (no == null){
-            throw new EBinVazio("Não existe esse elemento");
+            throw new EArvoreAVL("Não existe esse elemento");
         }
         else{
+            boolean direito = false;
+            if (no.pai != null){
+                if (no.pai.filhoDireita == no) direito = true; //Se ele for filho direito, isso vai ajudar na função de atualizar
+            }
             if (isExternal(no)){ //Quando ele é um nó folha 
                 if (no.pai.filhoDireita == no) no.pai.filhoDireita = null;
                 else no.pai.filhoEsquerda = null;
@@ -69,13 +188,18 @@ public class ArvoreAVL{
                 Node mudar;
                 if (no.filhoEsquerda != null) mudar = no.filhoEsquerda;
                 else mudar = no.filhoDireita;
-                if (no.pai.filhoDireita == no){
-                    no.pai.filhoDireita = mudar;
+                if (no.pai != null){
+                    if (no.pai.filhoDireita != null){
+                        if (no.pai.filhoDireita == no){
+                            no.pai.filhoDireita = mudar;
+                        }
+                    }
+                    if (no.pai.filhoDireita == null) no.pai.filhoEsquerda = mudar;
                 }
-                else{
-                    no.pai.filhoEsquerda = mudar;
-                }
+                
                 mudar.pai = no.pai;
+                if (mudar.pai == null) root = mudar; //Se ele não tem pai é root isso se dá quando o que eu removo é root
+                no = mudar; //Perigoso, mudei pois quando for chamar atualizar ele não reconhece no e dá null pois as alterações estão em mudar 
             }
             else{ //Se ele tiver dois filhos 
                 Node p = no.filhoDireita;
@@ -85,12 +209,23 @@ public class ArvoreAVL{
                 if (no.filhoDireita.filhoEsquerda == null){ //Tava dando erro no 4 (root) ligado ao 5 e euq uerendo retirar o 5
                     no.filhoDireita.pai = no;
                     no.filhoDireita = no.filhoDireita.filhoDireita;
+                    direito = true; //Pois caso o root seja substituido pelo seu filho direito eu só somo +1 pois o lado direito é diminuido
                 }
                 else{
                     if (p.pai.filhoDireita == p) p.pai.filhoDireita = null;
                     else p.pai.filhoEsquerda = null;
+                    direito = false;
                 }
                 no.valor = p.valor; 
+                if (no.pai == null) root = no; //Se ele não tem pai é root
+                no = p; //Pois caso eu remova o root o que tenho que partir atualizando a partir do que removi
+            }
+            int incremento = 1;
+            if (!direito && no != theRoot()) incremento = -1; 
+            if (no != theRoot()) atualizarFB(no.pai, incremento);
+            else{
+                if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0);
+                else atualizarFB(no, incremento);
             }
         }
     }
@@ -106,21 +241,5 @@ public class ArvoreAVL{
         }
         return p;
     }
-   
-    //Métodos exclusivos da AVL
-    public void atualizarFB(Node no){
-        if (no.pai.filhoDireita == no){ //Se ele for filho da direita 
-            while (no.pai != null){
-                Node pai = no.pai;
-                if (no.pai.filhoDireita)
-                if (pai.filhoDireita == no && filho == 0){
-                    pai.FB -= 1;
-                }
-                else if (pai.filhoEsquerda == no && filho == 1){
-                    pai.FB += 1;
-                    filho = 1;
-                }
-            }
-        }
-    }
+
 }

@@ -1,0 +1,39 @@
+ public void atualizarFB(Node no){ //no é nó que eu acabei de inserir 
+        int incremento = 1; 
+
+        if (no.pai.filhoDireita != null){ 
+            if (no.pai.filhoDireita == no){ //Se ele foi inserido na direita o incremento fica negativo
+                incremento = -1;
+            }
+        }
+        no = no.pai;
+        while (no.pai != null){ //Vou pegando o pai e atualizando seu FB
+            no.fb += incremento;
+            if (no.fb == 2 || no.fb == -2) break;
+            if (no.pai != null) no = no.pai;
+        }
+        System.out.println(no.valor + " " + no.fb);
+        if (no == theRoot()) no.fb += incremento; //Se for o root já o laço não roda e nó não atualiza 
+        if (no.fb == -2){ //Chama rotações aqui esquerdas aqui
+            if (no.filhoEsquerda != null){
+                if (no.filhoEsquerda.fb == -1) rotacaoDuplaEsquerda(no);
+                else rotacaoEsquerda(no); //Sinais não opostos é simples 
+            }
+            else rotacaoEsquerda(no); //Quando ele não tem filho para conferir sinal é simples
+
+            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+            no.fb = no.fb + 1 - Math.min(no.pai.fb, 0);
+            no.pai.fb = no.pai.fb + 1 + Math.max(no.fb, 0);
+        }
+        else if (no.fb == 2){ //Rotações direitas vão ser chamadas aqui
+            if (no.filhoDireita != null){
+                if (no.filhoDireita.fb == 1) rotacaoDuplaDireita(no);
+                else rotacaoDireita(no); 
+            }
+            else rotacaoDireita(no);
+
+            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+            no.fb = no.fb - 1 - Math.max(no.pai.fb, 0);
+            no.pai.fb = no.pai.fb - 1 + Math.min(no.fb, 0);
+        }
+    }
