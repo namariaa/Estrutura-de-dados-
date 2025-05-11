@@ -38,11 +38,11 @@ public class ArvoreAVL{
             while(p != null){
                 if (p.valor < v){
                     if (p.filhoDireita == null) break;
-                     p = p.filhoDireita;
+                    p = p.filhoDireita;
                 }
                 else{
                     if (p.filhoEsquerda == null) break;
-                     p = p.filhoEsquerda;
+                    p = p.filhoEsquerda;
                 }
             }
             novo.pai = p;
@@ -55,7 +55,8 @@ public class ArvoreAVL{
                     incremento = -1;
                 }
             }
-            atualizarFB(novo.pai, incremento);
+            if (novo.pai.fb + incremento != 0) atualizarFB(novo.pai, incremento); //Caso o nó tem um filho direito e insiro um esquerdo e vice-versa e ele fica 0 não muda acima
+            else novo.pai.fb += incremento;
         }
     }
 
@@ -83,6 +84,7 @@ public class ArvoreAVL{
                     }
                     no = no.pai;
                 }
+                else break;
             }
         }
         else no.fb += incremento; //Se for o root já o laço não roda e nó não atualiza 
@@ -206,14 +208,12 @@ public class ArvoreAVL{
                 while (p.filhoEsquerda != null){
                     p = p.filhoEsquerda;
                 }
-                if (no.filhoDireita.filhoEsquerda == null){ //Tava dando erro no 4 (root) ligado ao 5 e euq uerendo retirar o 5
-                    no.filhoDireita.pai = no;
-                    no.filhoDireita = no.filhoDireita.filhoDireita;
+                if (no.filhoDireita.filhoEsquerda == null){ //Se o nó que vai substituir é o filho direito do root
+                    no.filhoDireita = null;
                     direito = true; //Pois caso o root seja substituido pelo seu filho direito eu só somo +1 pois o lado direito é diminuido
-                }
-                else{
-                    if (p.pai.filhoDireita == p) p.pai.filhoDireita = null;
-                    else p.pai.filhoEsquerda = null;
+                } 
+                else {
+                    p.pai.filhoEsquerda = null;
                     direito = false;
                 }
                 no.valor = p.valor; 
@@ -222,10 +222,14 @@ public class ArvoreAVL{
             }
             int incremento = 1;
             if (!direito && no != theRoot()) incremento = -1; 
-            if (no != theRoot()) atualizarFB(no.pai, incremento);
+            if (direito && no != theRoot() && no.pai.filhoDireita == null && no.pai.fb == 0) no.pai.fb += 1; //Caso eu apague um filho direito mas ele ainda tem um filho esquerdo que a altura também é 1 ai não faz diferença para o pai
+            else if (!direito && no != theRoot() && no.pai.filhoEsquerda == null && no.pai.fb == 0) no.pai.fb -= 1;
             else{
-                if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0);
-                else atualizarFB(no, incremento);
+                if (no != theRoot()) atualizarFB(no.pai, incremento);
+                else{
+                    if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0);
+                    else atualizarFB(no, incremento);
+                }
             }
         }
     }

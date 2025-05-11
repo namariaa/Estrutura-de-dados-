@@ -37,3 +37,16 @@
             no.pai.fb = no.pai.fb - 1 + Math.min(no.fb, 0);
         }
     }
+
+
+
+System.out.println(no.valor + " " + no.fb + " " + incremento);
+
+
+if (no.pai != null){ //Esse caso foi criado para quando quero remover um nó que tem dois filhos, não é o root e seu filho a direita não tem filhos a esquerda
+                    System.out.println("po");
+                    if (no.fb - incremento == 0 && incremento == 1 && no.filhoDireita == null && no.filhoEsquerda != null) break; // Se antes o fb do nó era 0 se eu tirar 1 nó não vai influenciar no pai pois dele pois o outro lado ainda vai estar do mesmo tamanho 
+                }
+
+   System.out.println("v: " + no.valor + " " + no.fb);
+        System.out.println(theRoot().valor + " " + theRoot().fb);
