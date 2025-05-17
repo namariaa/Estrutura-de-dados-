@@ -50,3 +50,44 @@ if (no.pai != null){ //Esse caso foi criado para quando quero remover um nó que
 
    System.out.println("v: " + no.valor + " " + no.fb);
         System.out.println(theRoot().valor + " " + theRoot().fb);
+
+
+
+
+
+
+
+
+
+
+
+else{
+                    if (no.pai != null){ //Mudar o valor do incremento dependendo se for filho direito ou esquerdo 
+                        boolean change = false;
+                        if (no.pai.filhoEsquerda != null){
+                            if (no.pai.filhoEsquerda == no && incremento == -1) {
+                                incremento = 1;
+                                if (no.pai.pai == null){
+                                    no.pai.fb += incremento;
+                                    break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                }
+                                no = no.pai;
+                                change= true;
+                            }
+                        }
+                        if (no.pai.filhoDireita != null){
+                            if (no.pai.filhoDireita == no && incremento == 1){
+                                incremento = -1; 
+                                if (no.pai.pai == null){
+                                    no.pai.fb += incremento;
+                                    break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                } 
+                                no = no.pai;
+                                change= true;
+                                System.out.println("Direita:" + no.valor + " " + no.fb + " " + incremento);
+                                System.out.println("root:" + theRoot().valor + " " + theRoot().fb);
+                            }
+                        }
+                        if (!change) no = no.pai;
+                    }
+                }

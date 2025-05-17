@@ -112,5 +112,17 @@ public class teste {
         // lista.remove(20);
         // System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
         // O resultado deve ser 30 1
+        //Teste 16
+        lista.insert(70);
+        lista.insert(90);
+        lista.insert(50);
+        lista.insert(80);
+        lista.insert(60);
+        lista.insert(100);
+        lista.insert(40);
+        lista.insert(55);
+        // lista.remove(50);
+        System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
+        // 70 0
     }
 }

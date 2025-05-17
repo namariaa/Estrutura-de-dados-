@@ -55,61 +55,105 @@ public class ArvoreAVL{
                     incremento = -1;
                 }
             }
-            if (novo.pai.fb + incremento != 0) atualizarFB(novo.pai, incremento); //Caso o nó tem um filho direito e insiro um esquerdo e vice-versa e ele fica 0 não muda acima
+            System.out.println(novo.valor + " " + (novo.pai.fb ));
+            if (novo.pai.fb + incremento != 0) atualizarFB(novo.pai, incremento,"insert"); //Caso o nó tem um filho direito e insiro um esquerdo e vice-versa e ele fica 0 não muda acima
             else novo.pai.fb += incremento;
-        }
+        } 
     }
 
-    public void atualizarFB(Node no, int incremento){ //no é nó que eu acabei de inserir 
+    public void atualizarFB(Node no, int incremento, String tipo){ //no é nó que eu acabei de inserir 
         if (no != theRoot()){
             while (no != null){ //Vou pegando o pai e atualizando seu FB
+                System.out.println("Incremento:" + incremento);
                 no.fb += incremento;
-                if (no.fb == 2 || no.fb == -2) break;
-                if (no.pai != null){ //Mudar o valor do incremento dependendo se for filho direito ou esquerdo 
-                    if (no.pai.filhoEsquerda != null){
-                        if (no.pai.filhoEsquerda == no && incremento == -1) {
-                            incremento = 1;
-                            if (no.pai.pai == null) no.pai.fb += incremento;
-                            no = no.pai;
-                            break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                System.out.println("entarda:" + no.valor + " " + no.fb);
+                if (no.fb == -2){ //Chama rotações esquerdas aqui
+                        if (no.filhoDireita != null){
+                            if (no.filhoDireita.fb == 1) rotacaoDuplaEsquerda(no);
+                            else rotacaoEsquerda(no); //Sinais não opostos é simples 
                         }
+                        else rotacaoEsquerda(no); //Quando ele não tem filho para conferir sinal é simples
+
+                        //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+                        no.fb = no.fb + 1 - Math.min(no.pai.fb, 0);
+                        no.pai.fb = no.pai.fb + 1 + Math.max(no.fb, 0);
+                        if (no.pai != null && no.pai != theRoot()) no = no.pai;
+                        else break;
                     }
-                    if (no.pai.filhoDireita != null){
-                        if (no.pai.filhoDireita == no && incremento == 1){
-                            incremento = -1; 
-                            if (no.pai.pai == null) no.pai.fb += incremento;
-                            no = no.pai;
-                            break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                else if (no.fb == 2){ //Rotações direitas vão ser chamadas aqui
+                        if (no.filhoEsquerda != null){
+                            if (no.filhoEsquerda.fb == -1) rotacaoDuplaDireita(no);
+                            else rotacaoDireita(no); 
                         }
-                    }
-                    no = no.pai;
+                        else rotacaoDireita(no);
+                        
+                        //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
+                        no.fb = no.fb - 1 - Math.max(no.pai.fb, 0);
+                        no.pai.fb = no.pai.fb - 1 + Math.min(no.fb, 0);
+                        if (no.pai != null && no.pai != theRoot()) no = no.pai;
+                        else break;
                 }
-                else break;
-            }
+                else{
+                    if (no.pai != null){ //Mudar o valor do incremento dependendo se for filho direito ou esquerdo 
+                        boolean change = false;
+                        if (tipo == "insert"){
+                            if (no.pai.filhoEsquerda != null){
+                                if (no.pai.filhoEsquerda == no && incremento == -1) {
+                                    incremento = 1;
+                                    if (no.pai.pai == null){
+                                        no.pai.fb += incremento;
+                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                    }
+                                    no = no.pai;
+                                    change= true;
+                                }
+                            }
+                            if (no.pai.filhoDireita != null){
+                                if (no.pai.filhoDireita == no && incremento == 1){
+                                    incremento = -1; 
+                                    if (no.pai.pai == null){
+                                        no.pai.fb += incremento;
+                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                    } 
+                                    no = no.pai;
+                                    change= true;
+                                    System.out.println("Direita:" + no.valor + " " + no.fb + " " + incremento);
+                                    System.out.println("root:" + theRoot().valor + " " + theRoot().fb);
+                                }
+                            }
+                        }
+                        else{
+                            if (no.pai.filhoEsquerda != null){
+                                if (no.pai.filhoEsquerda == no && incremento == 1) {
+                                    incremento = 1;
+                                    if (no.pai.pai == null){
+                                        no.pai.fb += incremento;
+                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                    }
+                                    no = no.pai;
+                                    change= true;
+                                }
+                            }
+                            if (no.pai.filhoDireita != null){
+                                if (no.pai.filhoDireita == no && incremento == -1){
+                                    incremento = -1; 
+                                    if (no.pai.pai == null){
+                                        no.pai.fb += incremento;
+                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                    } 
+                                    no = no.pai;
+                                    change= true;
+                                    System.out.println("Direita:" + no.valor + " " + no.fb + " " + incremento);
+                                    System.out.println("root:" + theRoot().valor + " " + theRoot().fb);
+                                }
+                            }
+                        }
+                        if (!change) no = no.pai;
+                    }
+                }  
+                }
         }
-        else no.fb += incremento; //Se for o root já o laço não roda e nó não atualiza 
-        if (no.fb == -2){ //Chama rotações aqui esquerdas aqui
-            if (no.filhoDireita != null){
-                if (no.filhoDireita.fb == 1) rotacaoDuplaEsquerda(no);
-                else rotacaoEsquerda(no); //Sinais não opostos é simples 
-            }
-            else rotacaoEsquerda(no); //Quando ele não tem filho para conferir sinal é simples
-
-            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
-            no.fb = no.fb + 1 - Math.min(no.pai.fb, 0);
-            no.pai.fb = no.pai.fb + 1 + Math.max(no.fb, 0);
-        }
-        else if (no.fb == 2){ //Rotações direitas vão ser chamadas aqui
-            if (no.filhoEsquerda != null){
-                if (no.filhoEsquerda.fb == -1) rotacaoDuplaDireita(no);
-                else rotacaoDireita(no); 
-            }
-            else rotacaoDireita(no);
-
-            //Atualizar com formula após rotações no vai começar a ser o antigoRoot que é B e o pai dele o A 
-            no.fb = no.fb - 1 - Math.max(no.pai.fb, 0);
-            no.pai.fb = no.pai.fb - 1 + Math.min(no.fb, 0);
-        }
+        else no.fb += incremento; //Se for o root já o laço não roda e nó não atualiza
     }
 
     //Os nos que as rotações recebem inicialmente é o "root"
@@ -225,10 +269,11 @@ public class ArvoreAVL{
             if (direito && no != theRoot() && no.pai.filhoDireita == null && no.pai.fb == 0) no.pai.fb += 1; //Caso eu apague um filho direito mas ele ainda tem um filho esquerdo que a altura também é 1 ai não faz diferença para o pai
             else if (!direito && no != theRoot() && no.pai.filhoEsquerda == null && no.pai.fb == 0) no.pai.fb -= 1;
             else{
-                if (no != theRoot()) atualizarFB(no.pai, incremento);
+                System.out.println("Remove: " + no.pai.valor + " " + incremento);
+                if (no != theRoot()) atualizarFB(no.pai, incremento, "remove");
                 else{
-                    if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0);
-                    else atualizarFB(no, incremento);
+                    if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0, "remove");
+                    else atualizarFB(no, incremento, "remove");
                 }
             }
         }
@@ -245,5 +290,22 @@ public class ArvoreAVL{
         }
         return p;
     }
+
+    
+    // public int depth(Node no){
+    //     if (no == theRoot()) return 0;
+    //     else return 1 + depth(no.getPai());
+    // }
+
+    // public int height(Node no){
+    //     if (isExternal(no)) return 0;
+    //     else{
+    //         int cont = 0;
+    //         if (no.filhoDireita == null) cont += Math.max(cont, height(no.filhoEsquerda));
+    //         else if (no.filhoEsquerda == null) cont += Math.max(cont, height(no.filhoDireita));
+    //         else cont += Math.max(cont, (Math.max(height(no.filhoDireita), height(no.filhoEsquerda))));
+    //         return 1 + cont;
+    //     }
+    // }
 
 }
