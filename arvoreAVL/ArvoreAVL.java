@@ -55,7 +55,6 @@ public class ArvoreAVL{
                     incremento = -1;
                 }
             }
-            System.out.println(novo.valor + " " + (novo.pai.fb ));
             if (novo.pai.fb + incremento != 0) atualizarFB(novo.pai, incremento,"insert"); //Caso o nó tem um filho direito e insiro um esquerdo e vice-versa e ele fica 0 não muda acima
             else novo.pai.fb += incremento;
         } 
@@ -102,7 +101,12 @@ public class ArvoreAVL{
                                     incremento = 1;
                                     if (no.pai.pai == null){
                                         no.pai.fb += incremento;
-                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                        if (no.pai.fb == 2){
+                                            no = no.pai;
+                                            incremento = 0; // Pois já mudei o valor do root mas precisa fazer o laço novamente para testar se precisa de rotação por isso zero para não mudar o valor
+                                            continue; //Agora vou precisar apenas fazer rotações 
+                                        }
+                                        else break;
                                     }
                                     no = no.pai;
                                     change= true;
@@ -113,22 +117,30 @@ public class ArvoreAVL{
                                     incremento = -1; 
                                     if (no.pai.pai == null){
                                         no.pai.fb += incremento;
-                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                        if (no.pai.fb == -2){
+                                            no = no.pai;
+                                            incremento = 0; // Pois já mudei o valor do root mas precisa fazer o laço novamente para testar se precisa de rotação por isso zero para não mudar o valor
+                                            continue; //Agora vou precisar apenas fazer rotações 
+                                        }
+                                        else break;
                                     } 
                                     no = no.pai;
                                     change= true;
-                                    System.out.println("Direita:" + no.valor + " " + no.fb + " " + incremento);
-                                    System.out.println("root:" + theRoot().valor + " " + theRoot().fb);
                                 }
                             }
                         }
                         else{
                             if (no.pai.filhoEsquerda != null){
                                 if (no.pai.filhoEsquerda == no && incremento == 1) {
-                                    incremento = 1;
+                                    incremento = -1;
                                     if (no.pai.pai == null){
                                         no.pai.fb += incremento;
-                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                        if (no.pai.fb == -2){
+                                            no = no.pai;
+                                            incremento = 0; // Pois já mudei o valor do root mas precisa fazer o laço novamente para testar se precisa de rotação por isso zero para não mudar o valor
+                                            continue; //Agora vou precisar apenas fazer rotações 
+                                        }
+                                        else break;
                                     }
                                     no = no.pai;
                                     change= true;
@@ -136,20 +148,24 @@ public class ArvoreAVL{
                             }
                             if (no.pai.filhoDireita != null){
                                 if (no.pai.filhoDireita == no && incremento == -1){
-                                    incremento = -1; 
+                                    incremento = 1; 
                                     if (no.pai.pai == null){
                                         no.pai.fb += incremento;
-                                        break; //Pois já mudei o valor do root não preciso rodar o laço outra vez 
+                                        if (no.pai.fb == 2){
+                                            no = no.pai;
+                                            incremento = 0; // Pois já mudei o valor do root mas precisa fazer o laço novamente para testar se precisa de rotação por isso zero para não mudar o valor
+                                            continue; //Agora vou precisar apenas fazer rotações 
+                                        }
+                                        else break;
                                     } 
                                     no = no.pai;
                                     change= true;
-                                    System.out.println("Direita:" + no.valor + " " + no.fb + " " + incremento);
-                                    System.out.println("root:" + theRoot().valor + " " + theRoot().fb);
                                 }
                             }
                         }
                         if (!change) no = no.pai;
                     }
+                    else break;
                 }  
                 }
         }
@@ -269,7 +285,6 @@ public class ArvoreAVL{
             if (direito && no != theRoot() && no.pai.filhoDireita == null && no.pai.fb == 0) no.pai.fb += 1; //Caso eu apague um filho direito mas ele ainda tem um filho esquerdo que a altura também é 1 ai não faz diferença para o pai
             else if (!direito && no != theRoot() && no.pai.filhoEsquerda == null && no.pai.fb == 0) no.pai.fb -= 1;
             else{
-                System.out.println("Remove: " + no.pai.valor + " " + incremento);
                 if (no != theRoot()) atualizarFB(no.pai, incremento, "remove");
                 else{
                     if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0, "remove");

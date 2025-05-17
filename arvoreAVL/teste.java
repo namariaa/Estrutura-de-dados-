@@ -12,9 +12,9 @@ public class teste {
         // System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
         // Resultado deve ser respectivivamente 2 0 -> 3 1 -> 1 0
         //Tetes 02
-        // lista.insert(10);
-        // lista.insert(20);
         // lista.insert(30);
+        // lista.insert(20);
+        // lista.insert(10);
         // System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
         //Fique mudando a ordem dos 3 e quase todas devem dá o root 20 com fb 0
         //Teste 03
@@ -113,16 +113,16 @@ public class teste {
         // System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
         // O resultado deve ser 30 1
         //Teste 16
-        lista.insert(70);
-        lista.insert(90);
-        lista.insert(50);
-        lista.insert(80);
-        lista.insert(60);
-        lista.insert(100);
-        lista.insert(40);
-        lista.insert(55);
+        // lista.insert(70);
+        // lista.insert(90);
+        // lista.insert(50);
+        // lista.insert(80);
+        // lista.insert(60);
+        // lista.insert(100);
+        // lista.insert(40);
+        // lista.insert(55);
         // lista.remove(50);
-        System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
+        // System.out.println(lista.theRoot().valor + " " + lista.theRoot().fb);
         // 70 0
     }
 }
