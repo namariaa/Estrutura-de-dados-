@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class ArvoreAVL{
     public class Node{
         Node pai, filhoDireita, filhoEsquerda;
@@ -7,9 +9,12 @@ public class ArvoreAVL{
     //The Node
     public Node root;
     //Root
+    ArrayList<ArrayList<Node>> arvore; 
+    //Array que armazena árvore para exibir
 
     public ArvoreAVL(){
         this.root = null;
+        this.arvore = new ArrayList<>();
     }
     //Construtor
 
@@ -307,20 +312,116 @@ public class ArvoreAVL{
     }
 
     
-    // public int depth(Node no){
-    //     if (no == theRoot()) return 0;
-    //     else return 1 + depth(no.getPai());
-    // }
+    public int depth(Node no){
+        if (no == theRoot()) return 0;
+        else return 1 + depth(no.pai);
+    }
 
-    // public int height(Node no){
-    //     if (isExternal(no)) return 0;
-    //     else{
-    //         int cont = 0;
-    //         if (no.filhoDireita == null) cont += Math.max(cont, height(no.filhoEsquerda));
-    //         else if (no.filhoEsquerda == null) cont += Math.max(cont, height(no.filhoDireita));
-    //         else cont += Math.max(cont, (Math.max(height(no.filhoDireita), height(no.filhoEsquerda))));
-    //         return 1 + cont;
-    //     }
-    // }
+    public int height(Node no){
+        if (isExternal(no)) return 0;
+        else{
+            int cont = 0;
+            if (no.filhoDireita == null) cont += Math.max(cont, height(no.filhoEsquerda));
+            else if (no.filhoEsquerda == null) cont += Math.max(cont, height(no.filhoDireita));
+            else cont += Math.max(cont, (Math.max(height(no.filhoDireita), height(no.filhoEsquerda))));
+            return 1 + cont;
+        }
+    }
 
+    public int largura(Node no){
+        int cont = 0;
+        while (no != null){
+            if (no.pai != null){
+
+                if (no.pai.filhoEsquerda != null){
+                    if (no.pai.filhoEsquerda == no){
+                        if (no.pai.pai != null){
+                            if (no.pai.pai.filhoDireita == no.pai){
+                                no = no.pai.pai.filhoEsquerda;
+                                cont++;
+                                continue;
+                            }
+                        }
+                    }
+                    else{
+                        no = no.pai.filhoEsquerda;
+                        cont++;
+                        continue;
+                    }
+                }
+                else{ 
+                    if (no.pai.pai != null){
+                        if (no.pai.pai.filhoDireita != null){
+                            no = no.pai.pai.filhoDireita;
+                            cont++;
+                            continue;
+                        }
+                        if (no.pai.pai.filhoEsquerda != null){
+                            no = no.pai.pai.filhoEsquerda;
+                            cont++;
+                            continue;
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        return cont;
+    }
+
+    public void salvar(Node no){
+        if (no != null){
+            salvar(no.filhoEsquerda);
+            salvar(no.filhoDireita);
+            int profundidade = depth(no); 
+            this.arvore.get(largura(no)).set(profundidade, no); 
+        } 
+    }
+
+    public void exibir(){
+        int altura = height(theRoot());
+        //Preenche array e chama posteriomente função para salavar elementos na posiçõ correta 
+        for (int i = 0; i < altura + 2; i++){
+            ArrayList<Node> subsarvore = new ArrayList<>(altura + 1);
+            this.arvore.add(subsarvore);
+            for (int j = 0; j < altura + 1; j++){
+                Node nulo = new Node();
+                nulo.valor = -1;
+                subsarvore.add(nulo);
+            }
+        }
+        salvar(theRoot());
+        for (int i = 0; i < altura + 2; i++){
+            for (int j = 0; j < altura + 1; j++){
+                if (arvore.get(i).get(j).valor != -1){
+                    if (j == 0){
+                        for (int p = 0; p < altura + 1; p++) System.out.print(" ");
+                        System.out.println(arvore.get(i).get(j).valor);
+                    }
+                    else{
+                        for (int p = 0; p < altura; p++) System.out.print(" ");
+                        if (arvore.get(i).get(j).pai != null){
+                            if (arvore.get(i).get(j).pai.filhoEsquerda != null){
+                                if (arvore.get(i).get(j).pai.filhoEsquerda == arvore.get(i).get(j)) {
+                                    System.out.print(arvore.get(i).get(j).valor);
+                                }
+                                else{
+                                    System.out.println(arvore.get(i).get(j).valor);
+                                    for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
+                                }
+                            }
+                            else{
+                                System.out.println(arvore.get(i).get(j).valor);
+                                for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
+                            }
+                        }
+                        else{
+                            System.out.println(arvore.get(i).get(j).valor);
+                            for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
+                        }
+                    } 
+                }
+            }
+        }
+    }
 }
