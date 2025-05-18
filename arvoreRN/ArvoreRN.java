@@ -96,7 +96,39 @@ public class ArvoreRN {
         }
     }
 
-    public void tratarRemove(Node noInserido){}
+    public void tratarRemove(Node noInserido){
+        Node pai =  noInserido.pai;//Como essa verificação eu só faço quando não é null não preciso verificar s eo pai é null
+        Node vozinho = null;
+        Node irmao, sobrinhoDireito, sobrinhoEsquerdo = null;
+        if (pai.filhoEsquerda != null){
+            if (pai.filhoEsquerda == noInserido){ //Se sou filho esquerdo 
+                if (pai.pai != null){ //Meu pai não é orfão se ele for meu irmao e avô não existem e são considerados negros
+                    vozinho = pai.pai;
+                    if (vozinho.filhoEsquerda != null){
+                        if (vozinho.filhoEsquerda == pai){
+                            if (vozinho.filhoDireita != null) irmao = vozinho.filhoDireita;
+                            else irmao = null;
+                        }
+                    }
+                    if (vozinho.filhoDireita != null){
+                        if (vozinho.filhoDireita == pai){
+                            if (vozinho.filhoEsquerda != null) irmao = vozinho.filhoEsquerda;
+                            else irmao = null;
+                        }
+                    }
+                }
+            }
+        }
+        if (pai.filhoDireita != null){
+            if (pai.filhoDireita == noInserido){//Se sou filho direito aqui vai cobrir casos espelhados 
+                if (pai.filhoEsquerda != null){
+                    irmao = pai.filhoEsquerda;
+                    if (irmao.filhoEsquerda != null) sobrinhoDireito = irmao.filhoEsquerda;
+                    if (irmao.filhoDireita != null) sobrinhoEsquerdo = irmao.filhoDireita;
+                }
+            }
+        }
+    }
 
     public void insert(int v){
         Node novo = new Node();
