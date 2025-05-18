@@ -60,11 +60,14 @@ public class ArvoreRN {
         }
         else if (tio != null){ //Caso 02
             if ((vozinho == null || vozinho.cor == negro) && tio.cor == rubro && pai.cor == rubro){ //Condição do caso 02
-                if (vozinho != null) vozinho.cor = rubro;
+                if (vozinho != null){
+                    if (vozinho != root) vozinho.cor = rubro;
+                }
                 tio.cor = negro; //Tio não pode ser null se não ele é considerado negro o que não entra no caso 
                 pai.cor = negro;
             }
         }
+
         else if ((vozinho == null || vozinho.cor == negro) && (tio == null || tio.cor == negro) && pai.cor == rubro){
             if (vozinho != null){ 
                 if (vozinho.filhoEsquerda != null){ 
@@ -103,7 +106,7 @@ public class ArvoreRN {
             novo.filhoEsquerda = null;
             this.root = novo;
             novo.pai = null;
-            novo.cor = rubro; //Todo nó novo é 
+            novo.cor = negro; //Todo nó novo é 
         }
         else{
             Node p = this.root;
@@ -133,6 +136,7 @@ public class ArvoreRN {
         Node novoRoot = no.filhoDireita;
         Node antigoEsquerdo = no.filhoDireita.filhoEsquerda;
         Node antigoPaiRoot = no.pai;
+        String antigaCorRoot = no.cor;
         novoRoot.filhoEsquerda = no;
         no.pai = novoRoot;
         novoRoot.pai = antigoPaiRoot; //O pai do antigo root vai ser pai do root atual
@@ -147,6 +151,8 @@ public class ArvoreRN {
         }
         no.filhoDireita = antigoEsquerdo;
         if (antigoEsquerdo != null) antigoEsquerdo.pai = no;
+        no.cor = novoRoot.cor;
+        novoRoot.cor = antigaCorRoot;
         if (no == theRoot()) root = novoRoot; //Se o nó era o root eu tenho que definir e não uma subarvore eu tenho que definir o novo root
     }
 
@@ -154,6 +160,7 @@ public class ArvoreRN {
         Node novoRoot = no.filhoEsquerda;
         Node antigoDireito = no.filhoEsquerda.filhoDireita;
         Node antigoPaiRoot = no.pai;
+        String antigaCorRoot = no.cor;
         novoRoot.filhoDireita = no;
         no.pai = novoRoot;
         novoRoot.pai = antigoPaiRoot;
@@ -168,20 +175,29 @@ public class ArvoreRN {
         }
         no.filhoEsquerda = antigoDireito;
         if (antigoDireito != null) antigoDireito.pai = no;
+        no.cor = novoRoot.cor;
+        novoRoot.cor = antigaCorRoot;
         if (no == theRoot()) root = novoRoot; //Se o nó era o root eu tenho que definir e não uma subarvore eu tenho que definir o novo root
     }
 
     public void rotacaoDuplaEsquerda(Node no){
         rotacaoDireita(no.filhoDireita);
         //Filho direita do nó é A e o filho da direita do filho da direita é o B
-        //Como tem duas rotações preciso usar a formula duas vezes uma para a direita e a outra para a esquerda
+        String antigaCorRoot = no.cor;
+        Node novoRoot = no.filhoDireita;
         rotacaoEsquerda(no);
+        no.cor = novoRoot.cor;
+        novoRoot.cor = antigaCorRoot;
     }
 
     public void rotacaoDuplaDireita(Node no){
         rotacaoEsquerda(no.filhoEsquerda);
         //Filho esquerda do nó é A e o filho da esquerda do filho da esquerda é o B
+        String antigaCorRoot = no.cor;
+        Node novoRoot = no.filhoEsquerda;
         rotacaoDireita(no);
+        no.cor = novoRoot.cor;
+        novoRoot.cor = antigaCorRoot;
     }
 
     public void remove(int v) throws EArvoreRN{
