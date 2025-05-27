@@ -10,6 +10,6 @@ public class teste {
         lista.insert(7);
         lista.insert(8);
         lista.exibir();
-        System.out.println(lista.root.valor + " " + lista.root.cor);
+        System.out.println(lista.eRubro(lista.root, lista.qNegros()));
     }
 }

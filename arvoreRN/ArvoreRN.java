@@ -53,12 +53,12 @@ public class ArvoreRN {
                 else tio = nulo;
             }
         }
-            if (vozinho.filhoDireita != nulo){
-                if (vozinho.filhoDireita == pai){
-                    if (vozinho.filhoEsquerda != nulo) tio = vozinho.filhoEsquerda;
-                    else tio = nulo;
-                }
+        if (vozinho.filhoDireita != nulo){
+            if (vozinho.filhoDireita == pai){
+                if (vozinho.filhoEsquerda != nulo) tio = vozinho.filhoEsquerda;
+                else tio = nulo;
             }
+        }
 
         //Vamos verirficar os casos agora 
         if (pai.cor == negro){ //Caso 01  
@@ -69,6 +69,7 @@ public class ArvoreRN {
             if (vozinho != root && vozinho != nulo) vozinho.cor = rubro;
             tio.cor = negro; //Tio não pode ser nulo se não ele é considerado negro o que não entra no caso 
             pai.cor = negro;
+            if (vozinho != theRoot()) tratarInsert(vozinho);
             System.out.println("Caso 02 inserção");
         }
 
@@ -348,10 +349,47 @@ public class ArvoreRN {
         salvar(theRoot());
         for (int i = 0; i < altura + 1; i++){
             for (Node no : arvore.get(i)) { 
-               System.out.print("  " + no.valor + "  ");
+               System.out.print("  " + no.valor + "  " + no.cor + "  ");
             }
             System.out.println("  "); 
         }
+    }
+
+    public int qNegros(){
+        Node p = theRoot().filhoEsquerda;
+        int cont = 0;
+        while (p != nulo){
+            if (p.cor == negro) cont++;
+            p = p.filhoEsquerda;
+        }
+        return cont;
+    }
+
+    public boolean eRubro(Node no, int cont){
+        if (no != nulo){
+            boolean valido01 = eRubro(no.filhoEsquerda, cont);
+            boolean valido02 = eRubro(no.filhoDireita, cont);
+            if (valido01 && valido02){ //Caso eu retorne false alguma vez ele sempre retorna false
+                if (isExternal(no) && no != nulo){
+                    Node p = no;
+                    int cont2 = 0;
+                    while (p != theRoot()){
+                        if (p.cor == negro) cont2++;
+                        p = p.pai;
+                    }
+                    if (cont2 != cont) return false;
+                    else return true;
+                }
+                if (no.cor == rubro){
+                    if (no.filhoDireita.cor == negro && no.filhoEsquerda.cor == negro) return true;
+                    else return false;
+                }
+                if (no == theRoot() && no.cor == negro) return true;
+            }
+            else return false;
+        }
+        return true;
+    
     }
 }
 
