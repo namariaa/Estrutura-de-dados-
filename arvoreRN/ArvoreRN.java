@@ -314,47 +314,6 @@ public class ArvoreRN {
         return p;
     }
 
-    public int largura(Node no){
-        int cont = 0;
-        while (no != nulo){
-            if (no.pai != nulo){
-
-                if (no.pai.filhoEsquerda != nulo){
-                    if (no.pai.filhoEsquerda == no){
-                        if (no.pai.pai != nulo){
-                            if (no.pai.pai.filhoDireita == no.pai){
-                                no = no.pai.pai.filhoEsquerda;
-                                cont++;
-                                continue;
-                            }
-                        }
-                    }
-                    else{
-                        no = no.pai.filhoEsquerda;
-                        cont++;
-                        continue;
-                    }
-                }
-                else{ 
-                    if (no.pai.pai != nulo){
-                        if (no.pai.pai.filhoDireita != nulo){
-                            no = no.pai.pai.filhoDireita;
-                            cont++;
-                            continue;
-                        }
-                        if (no.pai.pai.filhoEsquerda != nulo){
-                            no = no.pai.pai.filhoEsquerda;
-                            cont++;
-                            continue;
-                        }
-                    }
-                }
-            }
-            break;
-        }
-        return cont;
-    }
-
     public int depth(Node no){
         if (no == theRoot()) return 0;
         else return 1 + depth(no.pai);
@@ -376,54 +335,22 @@ public class ArvoreRN {
             salvar(no.filhoEsquerda);
             salvar(no.filhoDireita);
             int profundidade = depth(no); 
-            this.arvore.get(largura(no)).set(profundidade, no); 
+            this.arvore.get(profundidade).add(no); 
         } 
     }
 
     public void exibir(){
         int altura = height(theRoot());
         //Preenche array e chama posteriomente função para salavar elementos na posiçõ correta 
-        for (int i = 0; i < altura + 2; i++){
-            ArrayList<Node> subsarvore = new ArrayList<>(altura + 1);
-            this.arvore.add(subsarvore);
-            for (int j = 0; j < altura + 1; j++){
-                Node nulo = new Node();
-                nulo.valor = -1;
-                subsarvore.add(nulo);
-            }
+        for (int i = 0; i < altura + 1; i++){
+            this.arvore.add(new ArrayList<Node>(altura + 1));
         }
         salvar(theRoot());
-        for (int i = 0; i < altura + 2; i++){
-            for (int j = 0; j < altura + 1; j++){
-                if (arvore.get(i).get(j).valor != -1){
-                    if (j == 0){
-                        for (int p = 0; p < altura + 1; p++) System.out.print(" ");
-                        System.out.println(arvore.get(i).get(j).valor);
-                    }
-                    else{
-                        for (int p = 0; p < altura; p++) System.out.print(" ");
-                        if (arvore.get(i).get(j).pai != nulo){
-                            if (arvore.get(i).get(j).pai.filhoEsquerda != nulo){
-                                if (arvore.get(i).get(j).pai.filhoEsquerda == arvore.get(i).get(j)) {
-                                    System.out.print(arvore.get(i).get(j).valor);
-                                }
-                                else{
-                                    System.out.println(arvore.get(i).get(j).valor);
-                                    for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
-                                }
-                            }
-                            else{
-                                System.out.println(arvore.get(i).get(j).valor);
-                                for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
-                            }
-                        }
-                        else{
-                            System.out.println(arvore.get(i).get(j).valor);
-                            for (int p = 0; p < altura * 2 + 1; p++) System.out.print(" ");
-                        }
-                    } 
-                }
+        for (int i = 0; i < altura + 1; i++){
+            for (Node no : arvore.get(i)) { 
+               System.out.print("  " + no.valor + "  ");
             }
+            System.out.println("  "); 
         }
     }
 }

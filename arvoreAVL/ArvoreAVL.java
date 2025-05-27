@@ -292,7 +292,7 @@ public class ArvoreAVL{
             else{
                 if (no != theRoot()) atualizarFB(no.pai, incremento, "remove");
                 else{
-                    if (no.filhoDireita == null && no.filhoEsquerda == null) atualizarFB(no, 0, "remove");
+                    if (no.filhoDireita == null && no.filhoEsquerda == null) no.fb = 0;
                     else atualizarFB(no, incremento, "remove");
                 }
             }
