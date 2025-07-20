@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.ArrayList;
 
 public class ArvoreRN {
     public static String rubro = "rubro";

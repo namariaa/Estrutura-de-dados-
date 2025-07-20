@@ -1,0 +1,22 @@
+for (int i = 0; i < r.chaves.length; i++) {
+                if (r.chaves[i] == valor)
+                    return r;
+                if (i + 1 < r.chaves.length) {
+                    if (r.chaves[i + 1] > valor) {
+                        r = r.filhos[i + 1];
+                    }
+                }
+                else{
+                    if (r.chaves[i] > valor){
+                        if (r.filhos[i + 1] != null){
+                            r = r.filhos[i + 1];
+                            break;
+                        }
+                    }
+                    else{
+                        if (r.filhos[i] != null){
+                            r = r.filhos[i];
+                            break;
+                        }
+                    }
+                }
