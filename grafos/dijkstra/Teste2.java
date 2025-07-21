@@ -17,5 +17,8 @@ public class Teste2 {
                 euLi.add(line);
             } 
         }
+        Dijkstra lista = new Dijkstra(euLi);
+        lista.dijkstra();
+        lista.exibir();
     }
 }
