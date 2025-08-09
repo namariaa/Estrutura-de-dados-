@@ -10,7 +10,8 @@ public class Teste {
         Verticie v3 = lista.getVerticie(lista, "D");
         lista.insertEdge(45, v1, v2, false);
         lista.insertEdge(80, v1, v3, true);
-        lista.removeVertex(v2);
+        // lista.removeVertex(v2);
+        System.out.println(lista.incidentEdges(v1));
         lista.showAll(lista);
     }
 }
