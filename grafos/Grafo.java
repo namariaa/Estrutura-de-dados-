@@ -6,6 +6,7 @@ public class Grafo {
     private Basics insercoes;
     private Exibition exibir;
     private Search busca;
+    private Utils utils;
 
     public Grafo(){
         this.verticies = new ArrayList<>();
@@ -13,6 +14,7 @@ public class Grafo {
         this.insercoes = new Basics();
         this.exibir = new Exibition();
         this.busca = new Search();
+        this.utils = new Utils();
     }
 
     //Métodos básicos
@@ -41,6 +43,39 @@ public class Grafo {
     //Métodos de exibição
     public void showAll(Grafo lista){
         this.exibir.showAll(lista);
+    }
+
+    //Métodos simples utils
+    public ArrayList<Verticie> finalVertex(Aresta e){
+        return this.utils.finalVertices(e);
+    }
+
+    public Verticie opposite(Verticie v, Aresta e){
+        return this.utils.oposto(v, e);
+    }
+
+    public void replaceVertex(Verticie v, String novoNom){
+        this.utils.substituirVerticie(v, novoNom);
+    }
+
+    public void replaceEdge(Aresta a, int n){
+        this.utils.substituirAresta(a, n);
+    }
+
+    public ArrayList<Aresta> incidentEdges(Verticie v){
+        return this.utils.arestasIncidente(v);
+    }
+
+    public ArrayList<Aresta> Edges(Grafo g){
+        return this.utils.Aresta(g);
+    }
+
+    public ArrayList<Verticie> Vertex(Grafo g){
+        return this.utils.Verticie(g);
+    }
+
+    public boolean isDirected(Aresta e){
+        return this.utils.eDirecionada(e);
     }
  
 }
