@@ -20,6 +20,6 @@ public class Teste3 {
         Estrela lista = new Estrela(euLi);
         lista.AEstrela();
         
-        // lista.exibir();
+        lista.exibir();
     }
 }

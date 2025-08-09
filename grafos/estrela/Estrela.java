@@ -124,7 +124,6 @@ public class Estrela {
     public void AEstrela(){
         Posicao noAtual = pontoInicial();
         while (noAtual != null){
-            System.out.println(noAtual.x);
             atualizarVizinhos(noAtual);
             visitados.get(noAtual.x).set(noAtual.y, true);
             noAtual = menorCusto(); 
@@ -157,7 +156,7 @@ public class Estrela {
 
     public int heuristica(Posicao pAtual){
         Posicao pFinal = pontoFinal();
-        //Usando mahatan 
+        //Usando mahathan 
         return Math.abs(pAtual.x - pFinal.x) + Math.abs(pAtual.y - pFinal.y);
     }
 
@@ -184,7 +183,10 @@ public class Estrela {
     public void exibir(){
         for (int i = 0; i < custos.size(); i++) {
             for (int j = 0; j < custos.get(0).size(); j++) {
-                System.out.print(custos.get(i).get(j) + " ");
+                if (custos.get(i).get(j) == 1000){
+                    System.out.print("*  ");
+                }
+                else System.out.print(custos.get(i).get(j) + " ");
             }
             System.out.println();
         }
