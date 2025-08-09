@@ -6,10 +6,11 @@ public class Basics {
         return new Verticie(valor);
     }
 
-    public void inserirAresta(int custo, Verticie v1, Verticie v2, Boolean direcionado){
+    public Aresta inserirAresta(int custo, Verticie v1, Verticie v2, Boolean direcionado){
         Aresta novo = new Aresta(custo, v1, v2, direcionado);
         v1.ligados.add(novo);
         v2.ligados.add(novo);  
+        return novo;
     }
 
     public void removerAresta(Aresta a){ //Retiro o nó de quem se liga a ele
